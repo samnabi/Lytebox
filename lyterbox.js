@@ -14,17 +14,6 @@ function LyteBox() {
                 this.borderSize                        = 12;                // if you adjust the padding in the CSS, you will need to update this variable -- otherwise, leave this alone...
         /*** End Global Configuration ***/
         
-        /*** Configure Slideshow Options ***/
-                this.slideInterval                = 4000;                // Change value (milliseconds) to increase/decrease the time between "slides" (10000 = 10 seconds)
-                this.showNavigation                = true;                // true to display Next/Prev buttons/text during slideshow, false to hide
-                this.showClose                        = true;                // true to display the Close button, false to hide
-                this.showDetails                = true;                // true to display image details (caption, count), false to hide
-                this.showPlayPause                = true;                // true to display pause/play buttons next to close button, false to hide
-                this.autoEnd                        = true;                // true to automatically close Lytebox after the last image is reached, false to keep open
-                this.pauseOnNextClick        = false;        // true to pause the slideshow when the "Next" button is clicked
-        this.pauseOnPrevClick         = true;                // true to pause the slideshow when the "Prev" button is clicked
-        /*** End Slideshow Configuration ***/
-        
         if(this.resizeSpeed > 10) { this.resizeSpeed = 10; }
         if(this.resizeSpeed < 1) { resizeSpeed = 1; }
         this.resizeDuration = (11 - this.resizeSpeed) * 0.15;
@@ -40,8 +29,6 @@ function LyteBox() {
         this.imageTimerCount                = 0;
         this.timerIDArray                        = new Array();
         this.timerIDCount                        = 0;
-        this.slideshowIDArray                = new Array();
-        this.slideshowIDCount                = 0;
         this.imageArray         = new Array();
         this.activeImage = null;
         this.slideArray         = new Array();
@@ -49,7 +36,6 @@ function LyteBox() {
         this.frameArray         = new Array();
         this.activeFrame = null;
         this.checkFrame();
-        this.isSlideshow = false;
         this.isLyteframe = false;
         /*@cc_on
                 /*@if (@_jscript)
@@ -149,16 +135,6 @@ LyteBox.prototype.initialize = function() {
     objClose.setAttribute('id', 'lbClose');
     objClose.setAttribute('href', '#');
     objBottomNav.appendChild(objClose);
-    var objPause = this.doc.createElement("a");
-    objPause.setAttribute('id', 'lbPause');
-    objPause.setAttribute('href', '#');
-    objPause.style.display = 'none';
-    objBottomNav.appendChild(objPause);
-    var objPlay = this.doc.createElement("a");
-    objPlay.setAttribute('id', 'lbPlay');
-    objPlay.setAttribute('href', '#');
-    objPlay.style.display = 'none';
-    objBottomNav.appendChild(objPlay);
 };
 
 LyteBox.prototype.updateLyteboxItems = function() {        
@@ -257,28 +233,13 @@ LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
                 if (id == 'lbMain') { myLytebox.end(); return false; }
         }
         this.doc.getElementById('lbClose').onclick = function() { myLytebox.end(); return false; }
-        this.doc.getElementById('lbPause').onclick = function() { myLytebox.togglePlayPause("lbPause", "lbPlay"); return false; }
-        this.doc.getElementById('lbPlay').onclick = function() { myLytebox.togglePlayPause("lbPlay", "lbPause"); return false; }        
-        this.isSlideshow = doSlide;
-        this.isPaused = (this.slideNum != 0 ? true : false);
-        if (this.isSlideshow && this.showPlayPause && this.isPaused) {
-                this.doc.getElementById('lbPlay').style.display = '';
-                this.doc.getElementById('lbPause').style.display = 'none';
-        }
         if (this.isLyteframe) {
                 this.changeContent(this.frameNum);
         } else {
-                if (this.isSlideshow) {
-                        this.changeContent(this.slideNum);
-                } else {
-                        this.changeContent(this.imageNum);
-                }
+                this.changeContent(this.imageNum);
         }
 };
 LyteBox.prototype.changeContent = function(imageNum) {
-        if (this.isSlideshow) {
-                for (var i = 0; i < this.slideshowIDCount; i++) { window.clearTimeout(this.slideshowIDArray[i]); }
-        }
         this.activeImage = this.activeSlide = this.activeFrame = imageNum;
         this.doc.getElementById('lbOuterContainer').style.border = 'none';
         this.doc.getElementById('lbDetailsContainer').style.border = 'none';
@@ -342,13 +303,13 @@ LyteBox.prototype.changeContent = function(imageNum) {
                                 }
                         }
                         var lbImage = myLytebox.doc.getElementById('lbImage')
-                        lbImage.src = (myLytebox.isSlideshow ? myLytebox.slideArray[myLytebox.activeSlide][0] : myLytebox.imageArray[myLytebox.activeImage][0]);
+                        lbImage.src = myLytebox.imageArray[myLytebox.activeImage][0];
                         lbImage.width = imageWidth;
                         lbImage.height = imageHeight;
                         myLytebox.resizeContainer(imageWidth, imageHeight);
                         imgPreloader.onload = function() {};
                 }
-                imgPreloader.src = (this.isSlideshow ? this.slideArray[this.activeSlide][0] : this.imageArray[this.activeImage][0]);
+                imgPreloader.src = this.imageArray[this.activeImage][0];
         }
 };
 LyteBox.prototype.resizeContainer = function(imgWidth, imgHeight) {
@@ -389,23 +350,7 @@ LyteBox.prototype.showContent = function() {
                         this.appear('lbImage', (this.doAnimations ? 0 : 100));
                         this.preloadNeighborImages();
                 }
-                if (this.isSlideshow) {
-                        if(this.activeSlide == (this.slideArray.length - 1)) {
-                                if (this.autoEnd) {
-                                        this.slideshowIDArray[this.slideshowIDCount++] = setTimeout("myLytebox.end('slideshow')", this.slideInterval);
-                                }
-                        } else {
-                                if (!this.isPaused) {
-                                        this.slideshowIDArray[this.slideshowIDCount++] = setTimeout("myLytebox.changeContent("+(this.activeSlide+1)+")", this.slideInterval);
-                                }
-                        }
-                        this.doc.getElementById('lbHoverNav').style.display = (this.showNavigation && this.navType == 1 ? '' : 'none');
-                        this.doc.getElementById('lbClose').style.display = (this.showClose ? '' : 'none');
-                        this.doc.getElementById('lbDetails').style.display = (this.showDetails ? '' : 'none');
-                        this.doc.getElementById('lbPause').style.display = (this.showPlayPause && !this.isPaused ? '' : 'none');
-                        this.doc.getElementById('lbPlay').style.display = (this.showPlayPause && !this.isPaused ? 'none' : '');
-                        this.doc.getElementById('lbNavDisplay').style.display = (this.showNavigation && this.navType == 2 ? '' : 'none');
-                } else {
+
                         this.doc.getElementById('lbHoverNav').style.display = (this.navType == 1 && !this.isLyteframe ? '' : 'none');
                         if ((this.navType == 2 && !this.isLyteframe && this.imageArray.length > 1) || (this.frameArray.length > 1 && this.isLyteframe)) {
                                 this.doc.getElementById('lbNavDisplay').style.display = '';
@@ -414,9 +359,7 @@ LyteBox.prototype.showContent = function() {
                         }
                         this.doc.getElementById('lbClose').style.display = '';
                         this.doc.getElementById('lbDetails').style.display = '';
-                        this.doc.getElementById('lbPause').style.display = 'none';
-                        this.doc.getElementById('lbPlay').style.display = 'none';
-                }
+
                 this.doc.getElementById('lbImageContainer').style.display = (this.isLyteframe ? 'none' : '');
                 this.doc.getElementById('lbIframeContainer').style.display = (this.isLyteframe ? '' : 'none');
                 try {
@@ -428,17 +371,13 @@ LyteBox.prototype.showContent = function() {
 };
 LyteBox.prototype.updateDetails = function() {
         var object = this.doc.getElementById('lbCaption');
-        var sTitle = (this.isSlideshow ? this.slideArray[this.activeSlide][1] : (this.isLyteframe ? this.frameArray[this.activeFrame][1] : this.imageArray[this.activeImage][1]));
+        var sTitle = (this.isLyteframe ? this.frameArray[this.activeFrame][1] : this.imageArray[this.activeImage][1]);
         object.style.display = '';
         object.innerHTML = (sTitle == null ? '' : sTitle);
         this.updateNav();
         this.doc.getElementById('lbDetailsContainer').style.display = '';
         object = this.doc.getElementById('lbNumberDisplay');
-        if (this.isSlideshow && this.slideArray.length > 1) {
-                object.style.display = '';
-                object.innerHTML = "Image " + eval(this.activeSlide + 1) + " of " + this.slideArray.length;
-                this.doc.getElementById('lbNavDisplay').style.display = (this.navType == 2 && this.showNavigation ? '' : 'none');
-        } else if (this.imageArray.length > 1 && !this.isLyteframe) {
+        if (this.imageArray.length > 1 && !this.isLyteframe) {
                 object.style.display = '';
                 object.innerHTML = "Image " + eval(this.activeImage + 1) + " of " + this.imageArray.length;
                 this.doc.getElementById('lbNavDisplay').style.display = (this.navType == 2 ? '' : 'none');
@@ -452,28 +391,7 @@ LyteBox.prototype.updateDetails = function() {
         this.appear('lbDetailsContainer', (this.doAnimations ? 0 : 100));
 };
 LyteBox.prototype.updateNav = function() {
-        if (this.isSlideshow) {
-                if (this.activeSlide != 0) {
-                        var object = (this.navType == 2 ? this.doc.getElementById('lbPrev2') : this.doc.getElementById('lbPrev'));
-                                object.style.display = '';
-                                object.onclick = function() {
-                                        if (myLytebox.pauseOnPrevClick) { myLytebox.togglePlayPause("lbPause", "lbPlay"); }
-                                        myLytebox.changeContent(myLytebox.activeSlide - 1); return false;
-                                }
-                } else {
-                        if (this.navType == 2) { this.doc.getElementById('lbPrev2_Off').style.display = ''; }
-                }
-                if (this.activeSlide != (this.slideArray.length - 1)) {
-                        var object = (this.navType == 2 ? this.doc.getElementById('lbNext2') : this.doc.getElementById('lbNext'));
-                                object.style.display = '';
-                                object.onclick = function() {
-                                        if (myLytebox.pauseOnNextClick) { myLytebox.togglePlayPause("lbPause", "lbPlay"); }
-                                        myLytebox.changeContent(myLytebox.activeSlide + 1); return false;
-                                }
-                } else {
-                        if (this.navType == 2) { this.doc.getElementById('lbNext2_Off').style.display = ''; }
-                }
-        } else if (this.isLyteframe) {
+        if (this.isLyteframe) {
                 if(this.activeFrame != 0) {
                         var object = this.doc.getElementById('lbPrev2');
                                 object.style.display = '';
@@ -524,12 +442,7 @@ LyteBox.prototype.keyboardAction = function(e) {
         if ((key == 'x') || (key == 'c') || (keycode == escape)) {
                 myLytebox.end();
         } else if ((key == 'p') || (keycode == 37)) {
-                if (myLytebox.isSlideshow) {
-                        if(myLytebox.activeSlide != 0) {
-                                myLytebox.disableKeyboardNav();
-                                myLytebox.changeContent(myLytebox.activeSlide - 1);
-                        }
-                } else if (myLytebox.isLyteframe) {
+                if (myLytebox.isLyteframe) {
                         if(myLytebox.activeFrame != 0) {
                                 myLytebox.disableKeyboardNav();
                                 myLytebox.changeContent(myLytebox.activeFrame - 1);
@@ -541,12 +454,7 @@ LyteBox.prototype.keyboardAction = function(e) {
                         }
                 }
         } else if ((key == 'n') || (keycode == 39)) {
-                if (myLytebox.isSlideshow) {
-                        if(myLytebox.activeSlide != (myLytebox.slideArray.length - 1)) {
-                                myLytebox.disableKeyboardNav();
-                                myLytebox.changeContent(myLytebox.activeSlide + 1);
-                        }
-                } else if (myLytebox.isLyteframe) {
+                if (myLytebox.isLyteframe) {
                         if(myLytebox.activeFrame != (myLytebox.frameArray.length - 1)) {
                                 myLytebox.disableKeyboardNav();
                                 myLytebox.changeContent(myLytebox.activeFrame + 1);
@@ -560,54 +468,21 @@ LyteBox.prototype.keyboardAction = function(e) {
         }
 };
 LyteBox.prototype.preloadNeighborImages = function() {
-        if (this.isSlideshow) {
-                if ((this.slideArray.length - 1) > this.activeSlide) {
-                        preloadNextImage = new Image();
-                        preloadNextImage.src = this.slideArray[this.activeSlide + 1][0];
-                }
-                if(this.activeSlide > 0) {
-                        preloadPrevImage = new Image();
-                        preloadPrevImage.src = this.slideArray[this.activeSlide - 1][0];
-                }
-        } else {
-                if ((this.imageArray.length - 1) > this.activeImage) {
-                        preloadNextImage = new Image();
-                        preloadNextImage.src = this.imageArray[this.activeImage + 1][0];
-                }
-                if(this.activeImage > 0) {
-                        preloadPrevImage = new Image();
-                        preloadPrevImage.src = this.imageArray[this.activeImage - 1][0];
-                }
+        if ((this.imageArray.length - 1) > this.activeImage) {
+                preloadNextImage = new Image();
+                preloadNextImage.src = this.imageArray[this.activeImage + 1][0];
         }
-};
-LyteBox.prototype.togglePlayPause = function(hideID, showID) {
-        if (this.isSlideshow && hideID == "lbPause") {
-                for (var i = 0; i < this.slideshowIDCount; i++) { window.clearTimeout(this.slideshowIDArray[i]); }
-        }
-        this.doc.getElementById(hideID).style.display = 'none';
-        this.doc.getElementById(showID).style.display = '';
-        if (hideID == "lbPlay") {
-                this.isPaused = false;
-                if (this.activeSlide == (this.slideArray.length - 1)) {
-                        this.end();
-                } else {
-                        this.changeContent(this.activeSlide + 1);
-                }
-        } else {
-                this.isPaused = true;
+        if(this.activeImage > 0) {
+                preloadPrevImage = new Image();
+                preloadPrevImage.src = this.imageArray[this.activeImage - 1][0];
         }
 };
 LyteBox.prototype.end = function(caller) {
-        var closeClick = (caller == 'slideshow' ? false : true);
-        if (this.isSlideshow && this.isPaused && !closeClick) { return; }
         this.disableKeyboardNav();
         this.doc.getElementById('lbMain').style.display = 'none';
         this.fade('lbOverlay', (this.doAnimations ? this.maxOpacity : 0));
         this.toggleSelects('visible');
         if (this.hideFlash) { this.toggleFlash('visible'); }
-        if (this.isSlideshow) {
-                for (var i = 0; i < this.slideshowIDCount; i++) { window.clearTimeout(this.slideshowIDArray[i]); }
-        }
         if (this.isLyteframe) {
                  this.initialize();
         }
