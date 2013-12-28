@@ -375,7 +375,6 @@ LyteBox.prototype.resizeContainer = function(imgWidth, imgHeight) {
         }
         this.doc.getElementById('lbPrev').style.height = imgHeight + "px";
         this.doc.getElementById('lbNext').style.height = imgHeight + "px";
-        this.doc.getElementById('lbDetailsContainer').style.width = "0px";
         this.showContent();
 };
 LyteBox.prototype.showContent = function() {
