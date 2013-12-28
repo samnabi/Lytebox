@@ -5,7 +5,6 @@ String.prototype.trim = function () { return this.replace(/^\s+|\s+$/g, ''); }
 function LyteBox() {
         /*** Start Global Configuration ***/
                 this.hideFlash                        = true;                // controls whether or not Flash objects should be hidden
-                this.outerBorder                = true;                // controls whether to show the outer grey (or theme) border
                 this.resizeSpeed                = 8;                // controls the speed of the image resizing (1=slowest and 10=fastest)
                 this.maxOpacity                        = 80;                // higher opacity = darker overlay, lower opacity = lighter overlay
                 this.navType                        = 1;                // 1 = "Prev/Next" buttons on top left and left (default), 2 = "<< prev | next >>" links next to image number
@@ -242,12 +241,8 @@ LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
         var object = this.doc.getElementById('lbMain');
                 object.style.top = (this.getPageScroll() + (pageSize[3] / 15)) + "px";
                 object.style.display = '';
-        if (!this.outerBorder) {
                 this.doc.getElementById('lbOuterContainer').style.border = 'none';
                 this.doc.getElementById('lbDetailsContainer').style.border = 'none';
-        } else {
-                this.doc.getElementById('lbOuterContainer').style.borderBottom = '';
-        }
         this.doc.getElementById('lbOverlay').onclick = function() { myLytebox.end(); return false; }
         this.doc.getElementById('lbMain').onclick = function(e) {
                 var e = e;
@@ -285,12 +280,8 @@ LyteBox.prototype.changeContent = function(imageNum) {
                 for (var i = 0; i < this.slideshowIDCount; i++) { window.clearTimeout(this.slideshowIDArray[i]); }
         }
         this.activeImage = this.activeSlide = this.activeFrame = imageNum;
-        if (!this.outerBorder) {
-                this.doc.getElementById('lbOuterContainer').style.border = 'none';
-                this.doc.getElementById('lbDetailsContainer').style.border = 'none';
-        } else {
-                this.doc.getElementById('lbOuterContainer').style.borderBottom = '';
-        }
+        this.doc.getElementById('lbOuterContainer').style.border = 'none';
+        this.doc.getElementById('lbDetailsContainer').style.border = 'none';
         this.doc.getElementById('lbLoading').style.display = '';
         this.doc.getElementById('lbImage').style.display = 'none';
         this.doc.getElementById('lbIframe').style.display = 'none';
@@ -384,15 +375,12 @@ LyteBox.prototype.resizeContainer = function(imgWidth, imgHeight) {
         }
         this.doc.getElementById('lbPrev').style.height = imgHeight + "px";
         this.doc.getElementById('lbNext').style.height = imgHeight + "px";
-        this.doc.getElementById('lbDetailsContainer').style.width = (imgWidth + (this.borderSize * 2) + (this.ie && this.doc.compatMode == "BackCompat" && this.outerBorder ? 2 : 0)) + "px";
+        this.doc.getElementById('lbDetailsContainer').style.width = "0px";
         this.showContent();
 };
 LyteBox.prototype.showContent = function() {
         if (this.wDone && this.hDone) {
                 for (var i = 0; i < this.showContentTimerCount; i++) { window.clearTimeout(this.showContentTimerArray[i]); }
-                if (this.outerBorder) {
-                        this.doc.getElementById('lbOuterContainer').style.borderBottom = 'none';
-                }
                 this.doc.getElementById('lbLoading').style.display = 'none';
                 if (this.isLyteframe) {
                         this.doc.getElementById('lbIframe').style.display = '';
