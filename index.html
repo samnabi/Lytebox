@@ -1,57 +1,54 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html>
 <html>
-
 <head>
-<title>Lyterbox Demo</title>
-<script src="lyterbox.js" type="text/javascript"></script>
-<link href="lyterbox.css" media="screen" rel="stylesheet" type="text/css" />
-<style>
-	a { display: inline-block; margin: 0 1em 0 0; }
-</style>
+	<title>Lyterbox Demo</title>
+	<script src="lyterbox.js" type="text/javascript"></script>
+	<link href="lyterbox.css" media="screen" rel="stylesheet" type="text/css" />
+	<style>
+		a { display: inline-block; margin: 0 1em 0 0; }
+	</style>
 </head>
-
 <body>
 
 <h1>Single Image</h1>
-<a href="images/andromeda.jpg" rel="lytebox" title="Andromeda">
-	<img alt="Andromeda" src="images/andromeda_thumb.jpg" style="border: none;" />
+<a href="http://placehold.it/800x600/636F57?text=Image+1" rel="lytebox" title="Image 1">
+	<img alt="Andromeda" src="http://placehold.it/300x150/636F57?text=Image+1" />
 </a>
 
 <h1>Image Gallery</h1>
-<a href="images/orion1.jpg" rel="lytebox[orion]" title="Orion Nebula #1">
-	<img alt="Orion Nebula #1" src="images/orion1_thumb.jpg" style="border: none;" />
+<a href="http://placehold.it/800x600/636F57?text=Image+1" rel="lytebox[group1]" title="Image 1">
+	<img alt="Andromeda" src="http://placehold.it/300x150/636F57?text=Image+1" />
 </a>
-<a href="images/orion2.jpg" rel="lytebox[orion]" title="Orion Nebula #2">
-	<img alt="Orion Nebula #2" src="images/orion2_thumb.jpg" style="border: none;" />
+<a href="http://placehold.it/800x600/838B8B?text=Image+2" rel="lytebox[group1]" title="Image 2">
+	<img alt="Andromeda" src="http://placehold.it/300x150/838B8B?text=Image+2" />
 </a>
-<a href="images/orion3.jpg" rel="lytebox[orion]" title="Orion Nebula #3">
-	<img alt="Orion Nebula #3" src="images/orion3_thumb.jpg" style="border: none;" />
+<a href="http://placehold.it/800x600/2E0854?text=Image+3" rel="lytebox[group1]" title="Image 3">
+	<img alt="Andromeda" src="http://placehold.it/300x150/2E0854?text=Image+3" />
 </a>
 
 <h1>Image Slideshow</h1>
-<a href="images/jupiter_io.jpg" rel="lyteshow[heavens]" title="Jupiter with one of its moons, Io">
-	<img alt="Jupiter with one of its moons, Io" src="images/jupiter_io_thumb.jpg" style="border: none;" />
+<a href="http://placehold.it/800x600/636F57?text=Image+1" rel="lyteshow[group2]" title="Image 1">
+	<img alt="Andromeda" src="http://placehold.it/300x150/636F57?text=Image+1" />
 </a>
-<a href="images/milky_way.jpg" rel="lyteshow[heavens]" title="The Milky Way">
-	<img alt="The Milky Way" src="images/milky_way_thumb.jpg" style="border: none;" />
+<a href="http://placehold.it/800x600/838B8B?text=Image+2" rel="lyteshow[group2]" title="Image 2">
+	<img alt="Andromeda" src="http://placehold.it/300x150/838B8B?text=Image+2" />
 </a>
-<a href="images/pleiads.jpg" rel="lyteshow[heavens]" title="The Pleiades">
-	<img alt="The Pleiades" src="images/pleiads_thumb.jpg" style="border: none;" />
+<a href="http://placehold.it/800x600/2E0854?text=Image+3" rel="lyteshow[group2]" title="Image 3">
+	<img alt="Andromeda" src="http://placehold.it/300x150/2E0854?text=Image+3" />
 </a>
 
 <h1>HTML Content &ndash; Single</h1>
-<a href="http://www.google.com" rel="lyteframe" rev="width: 640px; height: 380px; scrolling: auto;" title="Search Google">
-	Search Google!
+<a href="http://www.samnabi.com" rel="lyteframe" rev="width: 640px; height: 380px; scrolling: auto;" title="Open samnabi.com">
+	Open Sam Nabi's website
 </a>
 
 <h1>HTML Content &ndash; Gallery</h1>
-<a href="http://www.solstation.com/x-objects/andromeda.htm" rel="lyteframe[group]" rev="width: 740px; height: 380px;" title="M31 - Andromeda Galaxy">
-	M31 - Andromeda Galaxy
+<a href="http://www.samnabi.com/photography/travel" rel="lyteframe[group]" rev="width: 640px; height: 380px; scrolling: auto;" title="Open samnabi.com">
+	Sam Nabi's photos
 </a>
-<a href="http://www.spacetelescope.org/news/html/heic0601.html" rel="lyteframe[group]" rev="width: 720px; height: 420px; border: 2px inset #663C46; scrolling: auto;" title="M42 - Orion Nebula">
-	M42 - Orion Nebula
+<a href="http://www.samnabi.com/research" rel="lyteframe[group]" rev="width: 640px; height: 380px; scrolling: auto;" title="Open samnabi.com">
+	Sam Nabi's research
 </a>
 
 </body>
-
 </html>
