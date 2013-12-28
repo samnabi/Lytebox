@@ -4,7 +4,6 @@ String.prototype.trim = function () { return this.replace(/^\s+|\s+$/g, ''); }
 
 function LyteBox() {
         /*** Start Global Configuration ***/
-                this.theme                                = 'grey';        // themes: grey (default), red, green, blue, gold
                 this.hideFlash                        = true;                // controls whether or not Flash objects should be hidden
                 this.outerBorder                = true;                // controls whether to show the outer grey (or theme) border
                 this.resizeSpeed                = 8;                // controls the speed of the image resizing (1=slowest and 10=fastest)
@@ -84,7 +83,6 @@ LyteBox.prototype.initialize = function() {
     }
     var objOverlay = this.doc.createElement("div");
     objOverlay.setAttribute('id', 'lbOverlay');
-    objOverlay.setAttribute((this.ie ? 'className' : 'class'), this.theme);
     if ((this.ie && !this.ie7) || (this.ie7 && this.doc.compatMode == 'BackCompat')) {
         objOverlay.style.position = 'absolute';
     }
@@ -96,7 +94,6 @@ LyteBox.prototype.initialize = function() {
     objBody.appendChild(objLytebox);
     var objOuterContainer = this.doc.createElement("div");
     objOuterContainer.setAttribute('id', 'lbOuterContainer');
-    objOuterContainer.setAttribute((this.ie ? 'className' : 'class'), this.theme);
     objLytebox.appendChild(objOuterContainer);
     var objIframeContainer = this.doc.createElement("div");
     objIframeContainer.setAttribute('id', 'lbIframeContainer');
@@ -118,11 +115,9 @@ LyteBox.prototype.initialize = function() {
     objOuterContainer.appendChild(objLoading);
     var objDetailsContainer = this.doc.createElement("div");
     objDetailsContainer.setAttribute('id', 'lbDetailsContainer');
-    objDetailsContainer.setAttribute((this.ie ? 'className' : 'class'), this.theme);
     objLytebox.appendChild(objDetailsContainer);
     var objDetailsData = this.doc.createElement("div");
     objDetailsData.setAttribute('id', 'lbDetailsData');
-    objDetailsData.setAttribute((this.ie ? 'className' : 'class'), this.theme);
     objDetailsContainer.appendChild(objDetailsData);
     var objDetails = this.doc.createElement("div");
     objDetails.setAttribute('id', 'lbDetails');
@@ -138,12 +133,10 @@ LyteBox.prototype.initialize = function() {
     objDetailsData.appendChild(objBottomNav);
     var objPrev = this.doc.createElement("a");
     objPrev.setAttribute('id', 'lbPrev');
-    objPrev.setAttribute((this.ie ? 'className' : 'class'), this.theme);
     objPrev.setAttribute('href', '#');
     objHoverNav.appendChild(objPrev);
     var objNext = this.doc.createElement("a");
     objNext.setAttribute('id', 'lbNext');
-    objNext.setAttribute((this.ie ? 'className' : 'class'), this.theme);
     objNext.setAttribute('href', '#');
     objHoverNav.appendChild(objNext);
     var objNumberDisplay = this.doc.createElement("span");
@@ -155,18 +148,15 @@ LyteBox.prototype.initialize = function() {
     objDetails.appendChild(objNavDisplay);
     var objClose = this.doc.createElement("a");
     objClose.setAttribute('id', 'lbClose');
-    objClose.setAttribute((this.ie ? 'className' : 'class'), this.theme);
     objClose.setAttribute('href', '#');
     objBottomNav.appendChild(objClose);
     var objPause = this.doc.createElement("a");
     objPause.setAttribute('id', 'lbPause');
-    objPause.setAttribute((this.ie ? 'className' : 'class'), this.theme);
     objPause.setAttribute('href', '#');
     objPause.style.display = 'none';
     objBottomNav.appendChild(objPause);
     var objPlay = this.doc.createElement("a");
     objPlay.setAttribute('id', 'lbPlay');
-    objPlay.setAttribute((this.ie ? 'className' : 'class'), this.theme);
     objPlay.setAttribute('href', '#');
     objPlay.style.display = 'none';
     objBottomNav.appendChild(objPlay);
@@ -257,7 +247,6 @@ LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
                 this.doc.getElementById('lbDetailsContainer').style.border = 'none';
         } else {
                 this.doc.getElementById('lbOuterContainer').style.borderBottom = '';
-                this.doc.getElementById('lbOuterContainer').setAttribute((this.ie ? 'className' : 'class'), this.theme);
         }
         this.doc.getElementById('lbOverlay').onclick = function() { myLytebox.end(); return false; }
         this.doc.getElementById('lbMain').onclick = function(e) {
@@ -301,7 +290,6 @@ LyteBox.prototype.changeContent = function(imageNum) {
                 this.doc.getElementById('lbDetailsContainer').style.border = 'none';
         } else {
                 this.doc.getElementById('lbOuterContainer').style.borderBottom = '';
-                this.doc.getElementById('lbOuterContainer').setAttribute((this.ie ? 'className' : 'class'), this.theme);
         }
         this.doc.getElementById('lbLoading').style.display = '';
         this.doc.getElementById('lbImage').style.display = 'none';
@@ -313,7 +301,7 @@ LyteBox.prototype.changeContent = function(imageNum) {
         this.doc.getElementById('lbNumberDisplay').style.display = 'none';
         if (this.navType == 2 || this.isLyteframe) {
                 object = this.doc.getElementById('lbNavDisplay');
-                object.innerHTML = '&nbsp;&nbsp;&nbsp;<span id="lbPrev2_Off" style="display: none;" class="' + this.theme + '">&laquo; prev</span><a href="#" id="lbPrev2" class="' + this.theme + '" style="display: none;">&laquo; prev</a> <b id="lbSpacer" class="' + this.theme + '">||</b> <span id="lbNext2_Off" style="display: none;" class="' + this.theme + '">next &raquo;</span><a href="#" id="lbNext2" class="' + this.theme + '" style="display: none;">next &raquo;</a>';
+                object.innerHTML = '&nbsp;&nbsp;&nbsp;<span id="lbPrev2_Off" style="display: none;">&laquo; prev</span><a href="#" id="lbPrev2" style="display: none;">&laquo; prev</a> <b id="lbSpacer">||</b> <span id="lbNext2_Off" style="display: none;">next &raquo;</span><a href="#" id="lbNext2" style="display: none;">next &raquo;</a>';
                 object.style.display = 'none';
         }
         if (this.isLyteframe) {
