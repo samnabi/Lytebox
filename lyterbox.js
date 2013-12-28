@@ -1,11 +1,3 @@
-//	Lyterbox, by Sam Nabi
-//  (Forked from Lytebox v4.0.a)
-//	
-//	Original Author: Markus F. Hay
-//	Website: http://www.dolem.com/lytebox
-//	License: Creative Commons Attribution 3.0 License (http://creativecommons.org/licenses/by/3.0/)
-//  Credit: LyteBox was originally derived from the Lightbox class (v2.02) that was written by Lokesh Dhakar. For more
-//			 information please visit http://huddletogether.com/projects/lightbox2/
 Array.prototype.removeDuplicates = function () { for (var i = 1; i < this.length; i++) { if (this[i][0] == this[i-1][0]) { this.splice(i,1); } } }
 Array.prototype.empty = function () { for (var i = 0; i <= this.length; i++) { this.shift(); } }
 String.prototype.trim = function () { return this.replace(/^\s+|\s+$/g, ''); }
