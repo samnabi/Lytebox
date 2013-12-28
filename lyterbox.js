@@ -3,60 +3,50 @@ Array.prototype.empty = function () { for (var i = 0; i <= this.length; i++) { t
 String.prototype.trim = function () { return this.replace(/^\s+|\s+$/g, ''); }
 
 function LyteBox() {
-        /*** Start Global Configuration ***/
-                this.hideFlash                        = true;                // controls whether or not Flash objects should be hidden
-                this.resizeSpeed                = 8;                // controls the speed of the image resizing (1=slowest and 10=fastest)
-                this.maxOpacity                        = 80;                // higher opacity = darker overlay, lower opacity = lighter overlay
-                this.navType                        = 1;                // 1 = "Prev/Next" buttons on top left and left (default), 2 = "<< prev | next >>" links next to image number
-                this.autoResize                        = true;                // controls whether or not images should be resized if larger than the browser window dimensions
-                this.doAnimations                = true;                // controls whether or not "animate" Lytebox, i.e. resize transition between images, fade in/out effects, etc.
-                
-                this.borderSize                        = 12;                // if you adjust the padding in the CSS, you will need to update this variable -- otherwise, leave this alone...
-        /*** End Global Configuration ***/
-        
-        if(this.resizeSpeed > 10) { this.resizeSpeed = 10; }
-        if(this.resizeSpeed < 1) { resizeSpeed = 1; }
-        this.resizeDuration = (11 - this.resizeSpeed) * 0.15;
-        this.resizeWTimerArray                = new Array();
-        this.resizeWTimerCount                = 0;
-        this.resizeHTimerArray                = new Array();
-        this.resizeHTimerCount                = 0;
-        this.showContentTimerArray        = new Array();
-        this.showContentTimerCount        = 0;
-        this.overlayTimerArray                = new Array();
-        this.overlayTimerCount                = 0;
-        this.imageTimerArray                = new Array();
-        this.imageTimerCount                = 0;
-        this.timerIDArray                        = new Array();
-        this.timerIDCount                        = 0;
-        this.imageArray         = new Array();
-        this.activeImage = null;
-        this.slideArray         = new Array();
-        this.activeSlide = null;
-        this.frameArray         = new Array();
-        this.activeFrame = null;
-        this.checkFrame();
-        this.isLyteframe = false;
-        /*@cc_on
-                /*@if (@_jscript)
-        this.ie = (document.all && !window.opera) ? checkVersion() : false;
-                /*@else @*/
-                        this.ie = false;
-                /*@end
-        @*/
-        this.ie7 = (this.ie && window.XMLHttpRequest);        
-        this.initialize();
-}
+    
+    // Config
 
-function checkVersion() {
-    if (/MSIE (\d+\.\d+);/.test(navigator.userAgent)) {
-        var ieversion = new Number(RegExp.$1)
-        if (ieversion >= 8)
-            return false;
-        else if (ieversion < 8)
-            return true;
-    }
-    return false;
+    this.hideFlash = true;      // controls whether or not Flash objects should be hidden
+    this.resizeSpeed = 8;       // controls the speed of the image resizing (1=slowest and 10=fastest)
+    this.maxOpacity = 80;       // higher opacity = darker overlay, lower opacity = lighter overlay
+    this.navType = 1;           // 1 = "Prev/Next" buttons on top left and left (default), 2 = "<< prev | next >>" links next to image number
+    this.autoResize = true;     // controls whether or not images should be resized if larger than the browser window dimensions
+    this.doAnimations = true;   // controls whether or not "animate" Lytebox, i.e. resize transition between images, fade in/out effects, etc.
+    this.borderSize = 12;       // if you adjust the padding in the CSS, you will need to update this variable -- otherwise, leave this alone...
+
+    // End config
+        
+    if(this.resizeSpeed > 10) { this.resizeSpeed = 10; }
+    if(this.resizeSpeed < 1) { resizeSpeed = 1; }
+    this.resizeDuration = (11 - this.resizeSpeed) * 0.15;
+    this.resizeWTimerArray = new Array();
+    this.resizeWTimerCount = 0;
+    this.resizeHTimerArray = new Array();
+    this.resizeHTimerCount = 0;
+    
+    this.showContentTimerArray = new Array();
+    this.showContentTimerCount = 0;
+    this.overlayTimerArray = new Array();
+    this.overlayTimerCount = 0;
+    this.imageTimerArray = new Array();
+    this.imageTimerCount = 0;
+    this.timerIDArray = new Array();
+    this.timerIDCount = 0;
+    this.imageArray = new Array();
+    this.activeImage = null;
+    this.slideArray = new Array();
+    this.activeSlide = null;
+    this.frameArray = new Array();
+    this.activeFrame = null;
+    
+    this.checkFrame();
+    
+    this.isLyteframe = false;
+    
+    this.ie = false;
+    this.ie7 = (this.ie && window.XMLHttpRequest);        
+
+    this.initialize();
 }
 
 LyteBox.prototype.initialize = function() {
