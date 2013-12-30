@@ -1,149 +1,79 @@
-﻿#lbOverlay {
+﻿/* Wrappers */
+
+#lbOverlay {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 99998;
+    z-index: 99;
     width: 100%;
-    height: 500px;
-    background-color: #000000;
+    height: 100%; /* Will be rewritten by JS */
+    background-color: #111; /* For non-rgba compatible browsers */
+    background-color: rgba(0,0,0,0.9);
 }
 #lbMain {
     position: absolute;
     left: 0;
     width: 100%;
-    z-index: 99999;
+    z-index: 100; /* One higher than #lbOverlay */
     text-align: center;
     line-height: 0;
 }
 #lbMain a img {
     border: none
 }
+
+/* Top Nav */
+
+#lbNav {
+    text-align: right;
+}
+#lbClose {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    background: url(img/close.png) no-repeat;
+}
+
+/* Content */
+
 #lbOuterContainer {
     position: relative;
-    background-color: #fff;
-    width: 200px;
-    height: 200px;
     margin: 0 auto;
-    border: 3px solid #888888;
-}
-#lbDetailsContainer {
-    font: 10px Verdana, Helvetica, sans-serif;
-    background-color: #fff;
-    width: 100%;
-    line-height: 1.4em;
-    overflow: auto;
-    margin: 0 auto;
-    border: 3px solid #888888;
-    border-top: none;
-}
-#lbImageContainer,
-#lbIframeContainer {
-    padding: 10px
 }
 #lbLoading {
     position: absolute;
     top: 45%;
-    left: 0%;
     height: 32px;
     width: 100%;
     text-align: center;
     line-height: 0;
     background: url(img/loading.gif) center no-repeat;
 }
-#lbHoverNav {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    z-index: 10;
+
+/* Meta */
+
+#lbDetailsContainer {
+    color: white;
+    overflow: auto;
+    margin: 1em 0;
+    text-align: center;
+    line-height: 1.6em;
 }
-#lbImageContainer>#lbHoverNav {
-    left: 0
-}
-#lbHoverNav a {
-    outline: none
-}
-#lbPrev {
-    width: 49%;
-    height: 100%;
-    background: transparent url(img/blank.gif) no-repeat;
-    display: block;
-    left: 0;
-    float: left;
-}
-#lbPrev:hover,
-#lbPrev:visited:hover {
-    background: url(img/prev.gif) left 15% no-repeat
-}
+
+#lbPrev,
 #lbNext {
-    width: 49%;
-    height: 100%;
-    background: transparent url(img/blank.gif) no-repeat;
-    display: block;
-    right: 0;
-    float: right;
+    display: inline-block;
+    vertical-align: top;
+    width: 100px;
+    height: 100px;
 }
-#lbNext:hover,
-#lbNext:visited:hover {
-    background: url(img/next.gif) right 15% no-repeat
-}
-#lbPrev2,
-#lbNext2 {
-    text-decoration: none;
-    font-weight: bold;
-}
-#lbPrev2,
-#lbNext2,
-#lbSpacer {
-    color: #333333
-}
-#lbPrev2_Off,
-#lbNext2_Off {
-    font-weight: bold;
-    color: #CCCCCC;
-}
-#lbDetailsData {
-    padding: 0 10px;
-    color: #333333;
-}
+#lbPrev { background: url(img/prev.gif) left top no-repeat; }
+#lbNext { background: url(img/next.gif) right top no-repeat; }
+
 #lbDetails {
-    width: 60%;
-    float: left;
-    text-align: left;
+    display: inline-block;
+    vertical-align: top;
 }
-#lbCaption {
+#lbCaption,#lbNumberDisplay {
     display: block;
-    font-weight: bold;
-}
-#lbNumberDisplay {
-    float: left;
-    display: block;
-    padding-bottom: 1.0em;
-}
-#lbNavDisplay {
-    float: left;
-    display: block;
-    padding-bottom: 1.0em;
-}
-#lbClose {
-    width: 64px;
-    height: 28px;
-    float: right;
-    margin-bottom: 1px;
-    background: url(img/close.png) no-repeat;
-}
-#lbPlay {
-    width: 64px;
-    height: 28px;
-    float: right;
-    margin-bottom: 1px;
-    background: url(img/play.png) no-repeat;
-}
-#lbPause {
-    width: 64px;
-    height: 28px;
-    float: right;
-    margin-bottom: 1px;
-    background: url(img/pause.png) no-repeat;
 }

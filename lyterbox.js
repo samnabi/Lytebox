@@ -8,8 +8,7 @@ function LyteBox() {
 
     this.hideFlash = true;      // controls whether or not Flash objects should be hidden
     this.resizeSpeed = 8;       // controls the speed of the image resizing (1=slowest and 10=fastest)
-    this.maxOpacity = 80;       // higher opacity = darker overlay, lower opacity = lighter overlay
-    this.navType = 1;           // 1 = "Prev/Next" buttons on top left and left (default), 2 = "<< prev | next >>" links next to image number
+    this.maxOpacity = 100;       // higher opacity = darker overlay, lower opacity = lighter overlay
     this.autoResize = true;     // controls whether or not images should be resized if larger than the browser window dimensions
     this.doAnimations = true;   // controls whether or not "animate" Lytebox, i.e. resize transition between images, fade in/out effects, etc.
     this.borderSize = 12;       // if you adjust the padding in the CSS, you will need to update this variable -- otherwise, leave this alone...
@@ -50,81 +49,97 @@ function LyteBox() {
 }
 
 LyteBox.prototype.initialize = function() {
+    
     this.updateLyteboxItems();
-    var objBody = this.doc.getElementsByTagName("body").item(0);
+    
+    var objBody = this.doc.body;
+
     if (this.doc.getElementById('lbOverlay')) {
         objBody.removeChild(this.doc.getElementById("lbOverlay"));
         objBody.removeChild(this.doc.getElementById("lbMain"));
     }
+    
     var objOverlay = this.doc.createElement("div");
+
     objOverlay.setAttribute('id', 'lbOverlay');
     if ((this.ie && !this.ie7) || (this.ie7 && this.doc.compatMode == 'BackCompat')) {
         objOverlay.style.position = 'absolute';
     }
     objOverlay.style.display = 'none';
-    objBody.appendChild(objOverlay);
+
     var objLytebox = this.doc.createElement("div");
     objLytebox.setAttribute('id', 'lbMain');
     objLytebox.style.display = 'none';
-    objBody.appendChild(objLytebox);
+
     var objOuterContainer = this.doc.createElement("div");
     objOuterContainer.setAttribute('id', 'lbOuterContainer');
-    objLytebox.appendChild(objOuterContainer);
+
+    var objNav = this.doc.createElement("div");
+    objNav.setAttribute('id', 'lbNav');
+
     var objIframeContainer = this.doc.createElement("div");
     objIframeContainer.setAttribute('id', 'lbIframeContainer');
     objIframeContainer.style.display = 'none';
-    objOuterContainer.appendChild(objIframeContainer);
+
     var objIframe = this.doc.createElement("iframe");
     objIframe.setAttribute('id', 'lbIframe');
     objIframe.setAttribute('name', 'lbIframe');
     objIframe.style.display = 'none';
-    objIframeContainer.appendChild(objIframe);
+
     var objImageContainer = this.doc.createElement("div");
     objImageContainer.setAttribute('id', 'lbImageContainer');
-    objOuterContainer.appendChild(objImageContainer);
+
     var objLyteboxImage = this.doc.createElement("img");
     objLyteboxImage.setAttribute('id', 'lbImage');
-    objImageContainer.appendChild(objLyteboxImage);
+
     var objLoading = this.doc.createElement("div");
     objLoading.setAttribute('id', 'lbLoading');
-    objOuterContainer.appendChild(objLoading);
+
     var objDetailsContainer = this.doc.createElement("div");
     objDetailsContainer.setAttribute('id', 'lbDetailsContainer');
-    objLytebox.appendChild(objDetailsContainer);
+
     var objDetailsData = this.doc.createElement("div");
     objDetailsData.setAttribute('id', 'lbDetailsData');
-    objDetailsContainer.appendChild(objDetailsData);
+
     var objDetails = this.doc.createElement("div");
     objDetails.setAttribute('id', 'lbDetails');
-    objDetailsData.appendChild(objDetails);
+
     var objCaption = this.doc.createElement("span");
     objCaption.setAttribute('id', 'lbCaption');
-    objDetails.appendChild(objCaption);
-    var objHoverNav = this.doc.createElement("div");
-    objHoverNav.setAttribute('id', 'lbHoverNav');
-    objImageContainer.appendChild(objHoverNav);
-    var objBottomNav = this.doc.createElement("div");
-    objBottomNav.setAttribute('id', 'lbBottomNav');
-    objDetailsData.appendChild(objBottomNav);
+
     var objPrev = this.doc.createElement("a");
     objPrev.setAttribute('id', 'lbPrev');
     objPrev.setAttribute('href', '#');
-    objHoverNav.appendChild(objPrev);
+
     var objNext = this.doc.createElement("a");
     objNext.setAttribute('id', 'lbNext');
     objNext.setAttribute('href', '#');
-    objHoverNav.appendChild(objNext);
+
     var objNumberDisplay = this.doc.createElement("span");
     objNumberDisplay.setAttribute('id', 'lbNumberDisplay');
-    objDetails.appendChild(objNumberDisplay);
-    var objNavDisplay = this.doc.createElement("span");
-    objNavDisplay.setAttribute('id', 'lbNavDisplay');
-    objNavDisplay.style.display = 'none';
-    objDetails.appendChild(objNavDisplay);
+
     var objClose = this.doc.createElement("a");
     objClose.setAttribute('id', 'lbClose');
     objClose.setAttribute('href', '#');
-    objBottomNav.appendChild(objClose);
+
+    // Insert the elements
+    objBody.appendChild(objOverlay);
+    objBody.appendChild(objLytebox);
+        objLytebox.appendChild(objOuterContainer);
+            objOuterContainer.appendChild(objNav);
+                objNav.appendChild(objClose);
+            objOuterContainer.appendChild(objIframeContainer);
+                objIframeContainer.appendChild(objIframe);
+            objOuterContainer.appendChild(objImageContainer);
+                objImageContainer.appendChild(objLyteboxImage);
+            objOuterContainer.appendChild(objLoading);
+        objLytebox.appendChild(objDetailsContainer);
+            objDetailsContainer.appendChild(objDetailsData);
+                objDetailsData.appendChild(objPrev);
+                objDetailsData.appendChild(objDetails);
+                    objDetails.appendChild(objCaption);
+                    objDetails.appendChild(objNumberDisplay);
+                objDetailsData.appendChild(objNext);
 };
 
 LyteBox.prototype.updateLyteboxItems = function() {        
@@ -153,7 +168,7 @@ LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
         var objBody                = this.doc.getElementsByTagName("body").item(0);
         objOverlay.style.height = pageSize[1] + "px";
         objOverlay.style.display = '';
-        this.appear('lbOverlay', (this.doAnimations ? 0 : this.maxOpacity));
+        this.appear('lbOverlay', 100);
         var anchors = (this.isFrame) ? window.parent.frames[window.name].document.getElementsByTagName('a') : document.getElementsByTagName('a');
         if (this.isLyteframe) {
                 this.frameArray = [];
@@ -207,8 +222,6 @@ LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
         var object = this.doc.getElementById('lbMain');
                 object.style.top = (this.getPageScroll() + (pageSize[3] / 15)) + "px";
                 object.style.display = '';
-                this.doc.getElementById('lbOuterContainer').style.border = 'none';
-                this.doc.getElementById('lbDetailsContainer').style.border = 'none';
         this.doc.getElementById('lbOverlay').onclick = function() { myLytebox.end(); return false; }
         this.doc.getElementById('lbMain').onclick = function(e) {
                 var e = e;
@@ -232,20 +245,13 @@ LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
 LyteBox.prototype.changeContent = function(imageNum) {
         this.activeImage = this.activeSlide = this.activeFrame = imageNum;
         this.doc.getElementById('lbOuterContainer').style.border = 'none';
-        this.doc.getElementById('lbDetailsContainer').style.border = 'none';
         this.doc.getElementById('lbLoading').style.display = '';
         this.doc.getElementById('lbImage').style.display = 'none';
         this.doc.getElementById('lbIframe').style.display = 'none';
         this.doc.getElementById('lbPrev').style.display = 'none';
         this.doc.getElementById('lbNext').style.display = 'none';
         this.doc.getElementById('lbIframeContainer').style.display = 'none';
-        this.doc.getElementById('lbDetailsContainer').style.display = 'none';
         this.doc.getElementById('lbNumberDisplay').style.display = 'none';
-        if (this.navType == 2 || this.isLyteframe) {
-                object = this.doc.getElementById('lbNavDisplay');
-                object.innerHTML = '&nbsp;&nbsp;&nbsp;<span id="lbPrev2_Off" style="display: none;">&laquo; prev</span><a href="#" id="lbPrev2" style="display: none;">&laquo; prev</a> <b id="lbSpacer">||</b> <span id="lbNext2_Off" style="display: none;">next &raquo;</span><a href="#" id="lbNext2" style="display: none;">next &raquo;</a>';
-                object.style.display = 'none';
-        }
         if (this.isLyteframe) {
                 var iframe = myLytebox.doc.getElementById('lbIframe');
                 var styles = this.frameArray[this.activeFrame][2];
@@ -324,8 +330,6 @@ LyteBox.prototype.resizeContainer = function(imgWidth, imgHeight) {
         if ((hDiff == 0) && (wDiff == 0)) {
                 if (this.ie){ this.pause(250); } else { this.pause(100); }
         }
-        this.doc.getElementById('lbPrev').style.height = imgHeight + "px";
-        this.doc.getElementById('lbNext').style.height = imgHeight + "px";
         this.showContent();
 };
 LyteBox.prototype.showContent = function() {
@@ -341,12 +345,8 @@ LyteBox.prototype.showContent = function() {
                         this.preloadNeighborImages();
                 }
 
-                        this.doc.getElementById('lbHoverNav').style.display = (this.navType == 1 && !this.isLyteframe ? '' : 'none');
-                        if ((this.navType == 2 && !this.isLyteframe && this.imageArray.length > 1) || (this.frameArray.length > 1 && this.isLyteframe)) {
-                                this.doc.getElementById('lbNavDisplay').style.display = '';
-                        } else {
-                                this.doc.getElementById('lbNavDisplay').style.display = 'none';
-                        }
+                        this.doc.getElementById('lbPrev').style.display = (!this.isLyteframe ? '' : 'none');
+                        this.doc.getElementById('lbNext').style.display = (!this.isLyteframe ? '' : 'none');
                         this.doc.getElementById('lbClose').style.display = '';
                         this.doc.getElementById('lbDetails').style.display = '';
 
@@ -370,54 +370,42 @@ LyteBox.prototype.updateDetails = function() {
         if (this.imageArray.length > 1 && !this.isLyteframe) {
                 object.style.display = '';
                 object.innerHTML = "Image " + eval(this.activeImage + 1) + " of " + this.imageArray.length;
-                this.doc.getElementById('lbNavDisplay').style.display = (this.navType == 2 ? '' : 'none');
         } else if (this.frameArray.length > 1 && this.isLyteframe) {
                 object.style.display = '';
                 object.innerHTML = "Page " + eval(this.activeFrame + 1) + " of " + this.frameArray.length;
-                this.doc.getElementById('lbNavDisplay').style.display = '';
-        } else {
-                this.doc.getElementById('lbNavDisplay').style.display = 'none';
         }
         this.appear('lbDetailsContainer', (this.doAnimations ? 0 : 100));
 };
 LyteBox.prototype.updateNav = function() {
         if (this.isLyteframe) {
                 if(this.activeFrame != 0) {
-                        var object = this.doc.getElementById('lbPrev2');
+                        var object = this.doc.getElementById('lbPrev');
                                 object.style.display = '';
                                 object.onclick = function() {
                                         myLytebox.changeContent(myLytebox.activeFrame - 1); return false;
                                 }
-                } else {
-                        this.doc.getElementById('lbPrev2_Off').style.display = '';
                 }
                 if(this.activeFrame != (this.frameArray.length - 1)) {
-                        var object = this.doc.getElementById('lbNext2');
+                        var object = this.doc.getElementById('lbNext');
                                 object.style.display = '';
                                 object.onclick = function() {
                                         myLytebox.changeContent(myLytebox.activeFrame + 1); return false;
                                 }
-                } else {
-                        this.doc.getElementById('lbNext2_Off').style.display = '';
-                }                
+                }
         } else {
                 if(this.activeImage != 0) {
-                        var object = (this.navType == 2 ? this.doc.getElementById('lbPrev2') : this.doc.getElementById('lbPrev'));
+                        var object = this.doc.getElementById('lbPrev');
                                 object.style.display = '';
                                 object.onclick = function() {
                                         myLytebox.changeContent(myLytebox.activeImage - 1); return false;
                                 }
-                } else {
-                        if (this.navType == 2) { this.doc.getElementById('lbPrev2_Off').style.display = ''; }
                 }
                 if(this.activeImage != (this.imageArray.length - 1)) {
-                        var object = (this.navType == 2 ? this.doc.getElementById('lbNext2') : this.doc.getElementById('lbNext'));
+                        var object = this.doc.getElementById('lbNext');
                                 object.style.display = '';
                                 object.onclick = function() {
                                         myLytebox.changeContent(myLytebox.activeImage + 1); return false;
                                 }
-                } else {
-                        if (this.navType == 2) { this.doc.getElementById('lbNext2_Off').style.display = ''; }
                 }
         }
         this.enableKeyboardNav();
@@ -470,7 +458,7 @@ LyteBox.prototype.preloadNeighborImages = function() {
 LyteBox.prototype.end = function(caller) {
         this.disableKeyboardNav();
         this.doc.getElementById('lbMain').style.display = 'none';
-        this.fade('lbOverlay', (this.doAnimations ? this.maxOpacity : 0));
+        this.fade('lbOverlay', 0);
         this.toggleSelects('visible');
         if (this.hideFlash) { this.toggleFlash('visible'); }
         if (this.isLyteframe) {
