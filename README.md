@@ -11,6 +11,11 @@ Lyterbox was forked from [Terrill Nederveld's Lytebox (v4.0a)](https://github.co
 - Arrow key navigation
 - Click background to close
 
+### To do
+
+- Link directly to lightboxed content
+- Fix broken next/prev buttons
+
 ## Installation
 
 [...]

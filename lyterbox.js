@@ -5,19 +5,11 @@ String.prototype.trim = function () { return this.replace(/^\s+|\s+$/g, ''); }
 function LyteBox() {
     
     // Config
-
-    this.hideFlash = true;      // controls whether or not Flash objects should be hidden
-    this.resizeSpeed = 8;       // controls the speed of the image resizing (1=slowest and 10=fastest)
+    this.imgDir = '/Users/Sam/Sites/ASO/public_html/demo/Lyterbox/img'; // Absolute path of the image directory
     this.maxOpacity = 100;       // higher opacity = darker overlay, lower opacity = lighter overlay
     this.autoResize = true;     // controls whether or not images should be resized if larger than the browser window dimensions
-    this.doAnimations = true;   // controls whether or not "animate" Lytebox, i.e. resize transition between images, fade in/out effects, etc.
-    this.borderSize = 12;       // if you adjust the padding in the CSS, you will need to update this variable -- otherwise, leave this alone...
-
-    // End config
         
-    if(this.resizeSpeed > 10) { this.resizeSpeed = 10; }
-    if(this.resizeSpeed < 1) { resizeSpeed = 1; }
-    this.resizeDuration = (11 - this.resizeSpeed) * 0.15;
+    this.resizeDuration = 0.15;
     this.resizeWTimerArray = new Array();
     this.resizeWTimerCount = 0;
     this.resizeHTimerArray = new Array();
@@ -95,6 +87,9 @@ LyteBox.prototype.initialize = function() {
     var objLoading = this.doc.createElement("div");
     objLoading.setAttribute('id', 'lbLoading');
 
+    var objLoadingImg = this.doc.createElement("img");
+    objLoadingImg.setAttribute('src', this.imgDir+'/loading.gif');
+
     var objDetailsContainer = this.doc.createElement("div");
     objDetailsContainer.setAttribute('id', 'lbDetailsContainer');
 
@@ -111,9 +106,15 @@ LyteBox.prototype.initialize = function() {
     objPrev.setAttribute('id', 'lbPrev');
     objPrev.setAttribute('href', '#');
 
+    var objPrevImg = this.doc.createElement("img");
+    objPrevImg.setAttribute('src', this.imgDir+'/prev.png');
+
     var objNext = this.doc.createElement("a");
     objNext.setAttribute('id', 'lbNext');
     objNext.setAttribute('href', '#');
+
+    var objNextImg = this.doc.createElement("img");
+    objNextImg.setAttribute('src', this.imgDir+'/next.png');
 
     var objNumberDisplay = this.doc.createElement("span");
     objNumberDisplay.setAttribute('id', 'lbNumberDisplay');
@@ -122,24 +123,31 @@ LyteBox.prototype.initialize = function() {
     objClose.setAttribute('id', 'lbClose');
     objClose.setAttribute('href', '#');
 
+    var objCloseImg = this.doc.createElement("img");
+    objCloseImg.setAttribute('src', this.imgDir+'/close.png');
+
     // Insert the elements
     objBody.appendChild(objOverlay);
-    objBody.appendChild(objLytebox);
-        objLytebox.appendChild(objOuterContainer);
-            objOuterContainer.appendChild(objNav);
-                objNav.appendChild(objClose);
-            objOuterContainer.appendChild(objIframeContainer);
-                objIframeContainer.appendChild(objIframe);
-            objOuterContainer.appendChild(objImageContainer);
-                objImageContainer.appendChild(objLyteboxImage);
-            objOuterContainer.appendChild(objLoading);
-        objLytebox.appendChild(objDetailsContainer);
-            objDetailsContainer.appendChild(objDetailsData);
-                objDetailsData.appendChild(objPrev);
-                objDetailsData.appendChild(objDetails);
-                    objDetails.appendChild(objCaption);
-                    objDetails.appendChild(objNumberDisplay);
-                objDetailsData.appendChild(objNext);
+        objOverlay.appendChild(objLytebox);
+            objLytebox.appendChild(objOuterContainer);
+                objOuterContainer.appendChild(objNav);
+                    objNav.appendChild(objClose);
+                        objClose.appendChild(objCloseImg);
+                objOuterContainer.appendChild(objIframeContainer);
+                    objIframeContainer.appendChild(objIframe);
+                objOuterContainer.appendChild(objImageContainer);
+                    objImageContainer.appendChild(objLyteboxImage);
+                objOuterContainer.appendChild(objLoading);
+                    objLoading.appendChild(objLoadingImg);
+            objLytebox.appendChild(objDetailsContainer);
+                objDetailsContainer.appendChild(objDetailsData);
+                    objDetailsData.appendChild(objPrev);
+                        objPrev.appendChild(objPrevImg);
+                    objDetailsData.appendChild(objDetails);
+                        objDetails.appendChild(objCaption);
+                        objDetails.appendChild(objNumberDisplay);
+                    objDetailsData.appendChild(objNext);
+                        objNext.appendChild(objNextImg);
 };
 
 LyteBox.prototype.updateLyteboxItems = function() {        
@@ -161,7 +169,6 @@ LyteBox.prototype.updateLyteboxItems = function() {
 
 LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
         if (this.ie && !this.ie7) {        this.toggleSelects('hide');        }
-        if (this.hideFlash) { this.toggleFlash('hide'); }
         this.isLyteframe = (doFrame ? true : false);
         var pageSize        = this.getPageSize();
         var objOverlay        = this.doc.getElementById('lbOverlay');
@@ -244,7 +251,6 @@ LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
 };
 LyteBox.prototype.changeContent = function(imageNum) {
         this.activeImage = this.activeSlide = this.activeFrame = imageNum;
-        this.doc.getElementById('lbOuterContainer').style.border = 'none';
         this.doc.getElementById('lbLoading').style.display = '';
         this.doc.getElementById('lbImage').style.display = 'none';
         this.doc.getElementById('lbIframe').style.display = 'none';
@@ -311,19 +317,19 @@ LyteBox.prototype.changeContent = function(imageNum) {
 LyteBox.prototype.resizeContainer = function(imgWidth, imgHeight) {
         this.wCur = this.doc.getElementById('lbOuterContainer').offsetWidth;
         this.hCur = this.doc.getElementById('lbOuterContainer').offsetHeight;
-        this.xScale = ((imgWidth + (this.borderSize * 2)) / this.wCur) * 100;
-        this.yScale = ((imgHeight + (this.borderSize * 2)) / this.hCur) * 100;
-        var wDiff = (this.wCur - this.borderSize * 2) - imgWidth;
-        var hDiff = (this.hCur - this.borderSize * 2) - imgHeight;
+        this.xScale = (imgWidth / this.wCur) * 100;
+        this.yScale = (imgHeight / this.hCur) * 100;
+        var wDiff = this.wCur - imgWidth;
+        var hDiff = this.hCur - imgHeight;
         if (!(hDiff == 0)) {
                 this.hDone = false;
-                this.resizeH('lbOuterContainer', this.hCur, imgHeight + this.borderSize*2, this.getPixelRate(this.hCur, imgHeight));
+                this.resizeH('lbOuterContainer', this.hCur, imgHeight+this.doc.getElementById('lbNav').offsetHeight, this.getPixelRate(this.hCur, imgHeight+this.doc.getElementById('lbNav').offsetHeight));
         } else {
                 this.hDone = true;
         }
         if (!(wDiff == 0)) {
                 this.wDone = false;
-                this.resizeW('lbOuterContainer', this.wCur, imgWidth + this.borderSize*2, this.getPixelRate(this.wCur, imgWidth));
+                this.resizeW('lbOuterContainer', this.wCur, imgWidth, this.getPixelRate(this.wCur, imgWidth));
         } else {
                 this.wDone = true;
         }
@@ -338,10 +344,10 @@ LyteBox.prototype.showContent = function() {
                 this.doc.getElementById('lbLoading').style.display = 'none';
                 if (this.isLyteframe) {
                         this.doc.getElementById('lbIframe').style.display = '';
-                        this.appear('lbIframe', (this.doAnimations ? 0 : 100));
+                        this.appear('lbIframe', 100);
                 } else {
                         this.doc.getElementById('lbImage').style.display = '';
-                        this.appear('lbImage', (this.doAnimations ? 0 : 100));
+                        this.appear('lbImage', 100);
                         this.preloadNeighborImages();
                 }
 
@@ -374,7 +380,7 @@ LyteBox.prototype.updateDetails = function() {
                 object.style.display = '';
                 object.innerHTML = "Page " + eval(this.activeFrame + 1) + " of " + this.frameArray.length;
         }
-        this.appear('lbDetailsContainer', (this.doAnimations ? 0 : 100));
+        this.appear('lbDetailsContainer', 100);
 };
 LyteBox.prototype.updateNav = function() {
         if (this.isLyteframe) {
@@ -460,7 +466,6 @@ LyteBox.prototype.end = function(caller) {
         this.doc.getElementById('lbMain').style.display = 'none';
         this.fade('lbOverlay', 0);
         this.toggleSelects('visible');
-        if (this.hideFlash) { this.toggleFlash('visible'); }
         if (this.isLyteframe) {
                  this.initialize();
         }
@@ -534,7 +539,7 @@ LyteBox.prototype.resizeW = function(id, curW, maxW, pixelrate, speed) {
         }
         var object = this.doc.getElementById(id);
         var timer = speed ? speed : (this.resizeDuration/2);
-        var newW = (this.doAnimations ? curW : maxW);
+        var newW = maxW;
         object.style.width = (newW) + "px";
         if (newW < maxW) {
                 newW += (newW + pixelrate >= maxW) ? (maxW - newW) : pixelrate;
@@ -601,32 +606,6 @@ LyteBox.prototype.getPageSize = function() {
         var pageHeight = (yScroll < windowHeight) ? windowHeight : yScroll;
         var pageWidth = (xScroll < windowWidth) ? windowWidth : xScroll;
         return new Array(pageWidth, pageHeight, windowWidth, windowHeight);
-};
-LyteBox.prototype.toggleFlash = function(state) {
-        var objects = this.doc.getElementsByTagName("object");
-        for (var i = 0; i < objects.length; i++) {
-                objects[i].style.visibility = (state == "hide") ? 'hidden' : 'visible';
-        }
-        var embeds = this.doc.getElementsByTagName("embed");
-        for (var i = 0; i < embeds.length; i++) {
-                embeds[i].style.visibility = (state == "hide") ? 'hidden' : 'visible';
-        }
-        if (this.isFrame) {
-                for (var i = 0; i < parent.frames.length; i++) {
-                        try {
-                                objects = parent.frames[i].window.document.getElementsByTagName("object");
-                                for (var j = 0; j < objects.length; j++) {
-                                        objects[j].style.visibility = (state == "hide") ? 'hidden' : 'visible';
-                                }
-                        } catch(e) { }
-                        try {
-                                embeds = parent.frames[i].window.document.getElementsByTagName("embed");
-                                for (var j = 0; j < embeds.length; j++) {
-                                        embeds[j].style.visibility = (state == "hide") ? 'hidden' : 'visible';
-                                }
-                        } catch(e) { }
-                }
-        }
 };
 LyteBox.prototype.toggleSelects = function(state) {
         var selects = this.doc.getElementsByTagName("select");
