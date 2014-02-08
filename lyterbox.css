@@ -9,17 +9,17 @@
     height: 100%; /* Will be rewritten by JS */
     background-color: #111; /* For non-rgba compatible browsers */
     background-color: rgba(0,0,0,0.9);
-    line-height: 1;
 }
 #lbMain {
     position: absolute;
     left: 0;
     width: 100%;
+    z-index: 100; /* One higher than #lbOverlay */
     text-align: center;
+    line-height: 0;
 }
 #lbMain a img {
-    border: none;
-    max-width: 100%;
+    border: none
 }
 
 /* Top Nav */
@@ -29,8 +29,9 @@
 }
 #lbClose {
     display: inline-block;
-    width: 2em;
-    margin-right: -2em;
+    width: 32px;
+    height: 32px;
+    background: url(img/close.png) no-repeat;
 }
 
 /* Content */
@@ -42,8 +43,11 @@
 #lbLoading {
     position: absolute;
     top: 45%;
+    height: 32px;
     width: 100%;
     text-align: center;
+    line-height: 0;
+    background: url(img/loading.gif) center no-repeat;
 }
 
 /* Meta */
@@ -60,8 +64,11 @@
 #lbNext {
     display: inline-block;
     vertical-align: top;
-    padding: 0 2em;
+    width: 100px;
+    height: 100px;
 }
+#lbPrev { background: url(img/prev.png) left top no-repeat; }
+#lbNext { background: url(img/next.png) right top no-repeat; }
 
 #lbDetails {
     display: inline-block;
