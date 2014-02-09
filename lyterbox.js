@@ -3,21 +3,8 @@ Array.prototype.empty = function () { for (var i = 0; i <= this.length; i++) { t
 String.prototype.trim = function () { return this.replace(/^\s+|\s+$/g, ''); }
 
 function LyteBox() {
-    
-    // Config
-
-    this.hideFlash = true;      // controls whether or not Flash objects should be hidden
-    this.resizeSpeed = 8;       // controls the speed of the image resizing (1=slowest and 10=fastest)
-    this.maxOpacity = 100;       // higher opacity = darker overlay, lower opacity = lighter overlay
-    this.autoResize = true;     // controls whether or not images should be resized if larger than the browser window dimensions
-    this.doAnimations = true;   // controls whether or not "animate" Lytebox, i.e. resize transition between images, fade in/out effects, etc.
-    this.borderSize = 12;       // if you adjust the padding in the CSS, you will need to update this variable -- otherwise, leave this alone...
-
-    // End config
         
-    if(this.resizeSpeed > 10) { this.resizeSpeed = 10; }
-    if(this.resizeSpeed < 1) { resizeSpeed = 1; }
-    this.resizeDuration = (11 - this.resizeSpeed) * 0.15;
+    this.resizeDuration = 0.15;
     this.resizeWTimerArray = new Array();
     this.resizeWTimerCount = 0;
     this.resizeHTimerArray = new Array();
@@ -161,7 +148,6 @@ LyteBox.prototype.updateLyteboxItems = function() {
 
 LyteBox.prototype.start = function(imageLink, doSlide, doFrame) {
         if (this.ie && !this.ie7) {        this.toggleSelects('hide');        }
-        if (this.hideFlash) { this.toggleFlash('hide'); }
         this.isLyteframe = (doFrame ? true : false);
         var pageSize        = this.getPageSize();
         var objOverlay        = this.doc.getElementById('lbOverlay');
@@ -278,26 +264,26 @@ LyteBox.prototype.changeContent = function(imageNum) {
                 imgPreloader.onload = function() {
                         var imageWidth = imgPreloader.width;
                         var imageHeight = imgPreloader.height;
-                        if (myLytebox.autoResize) {
-                                var pagesize = myLytebox.getPageSize();
-                                var x = pagesize[2] - 150;
-                                var y = pagesize[3] - 150;
+                        // Resize
+                        var pagesize = myLytebox.getPageSize();
+                        var x = pagesize[2] - 150;
+                        var y = pagesize[3] - 150;
+                        if (imageWidth > x) {
+                                imageHeight = Math.round(imageHeight * (x / imageWidth));
+                                imageWidth = x;
+                                if (imageHeight > y) {
+                                        imageWidth = Math.round(imageWidth * (y / imageHeight));
+                                        imageHeight = y;
+                                }
+                        } else if (imageHeight > y) {
+                                imageWidth = Math.round(imageWidth * (y / imageHeight));
+                                imageHeight = y;
                                 if (imageWidth > x) {
                                         imageHeight = Math.round(imageHeight * (x / imageWidth));
                                         imageWidth = x;
-                                        if (imageHeight > y) {
-                                                imageWidth = Math.round(imageWidth * (y / imageHeight));
-                                                imageHeight = y;
-                                        }
-                                } else if (imageHeight > y) {
-                                        imageWidth = Math.round(imageWidth * (y / imageHeight));
-                                        imageHeight = y;
-                                        if (imageWidth > x) {
-                                                imageHeight = Math.round(imageHeight * (x / imageWidth));
-                                                imageWidth = x;
-                                        }
                                 }
                         }
+
                         var lbImage = myLytebox.doc.getElementById('lbImage')
                         lbImage.src = myLytebox.imageArray[myLytebox.activeImage][0];
                         lbImage.width = imageWidth;
@@ -311,19 +297,19 @@ LyteBox.prototype.changeContent = function(imageNum) {
 LyteBox.prototype.resizeContainer = function(imgWidth, imgHeight) {
         this.wCur = this.doc.getElementById('lbOuterContainer').offsetWidth;
         this.hCur = this.doc.getElementById('lbOuterContainer').offsetHeight;
-        this.xScale = ((imgWidth + (this.borderSize * 2)) / this.wCur) * 100;
-        this.yScale = ((imgHeight + (this.borderSize * 2)) / this.hCur) * 100;
-        var wDiff = (this.wCur - this.borderSize * 2) - imgWidth;
-        var hDiff = (this.hCur - this.borderSize * 2) - imgHeight;
+        this.xScale = (imgWidth / this.wCur) * 100;
+        this.yScale = (imgHeight / this.hCur) * 100;
+        var wDiff = this.wCur - imgWidth;
+        var hDiff = this.hCur - imgHeight;
         if (!(hDiff == 0)) {
                 this.hDone = false;
-                this.resizeH('lbOuterContainer', this.hCur, imgHeight + this.borderSize*2, this.getPixelRate(this.hCur, imgHeight));
+                this.resizeH('lbOuterContainer', this.hCur, imgHeight + this.doc.getElementById('lbNav').offsetHeight, this.getPixelRate(this.hCur, imgHeight));
         } else {
                 this.hDone = true;
         }
         if (!(wDiff == 0)) {
                 this.wDone = false;
-                this.resizeW('lbOuterContainer', this.wCur, imgWidth + this.borderSize*2, this.getPixelRate(this.wCur, imgWidth));
+                this.resizeW('lbOuterContainer', this.wCur, imgWidth, this.getPixelRate(this.wCur, imgWidth));
         } else {
                 this.wDone = true;
         }
@@ -338,10 +324,10 @@ LyteBox.prototype.showContent = function() {
                 this.doc.getElementById('lbLoading').style.display = 'none';
                 if (this.isLyteframe) {
                         this.doc.getElementById('lbIframe').style.display = '';
-                        this.appear('lbIframe', (this.doAnimations ? 0 : 100));
+                        this.appear('lbIframe', 100);
                 } else {
                         this.doc.getElementById('lbImage').style.display = '';
-                        this.appear('lbImage', (this.doAnimations ? 0 : 100));
+                        this.appear('lbImage', 100);
                         this.preloadNeighborImages();
                 }
 
@@ -374,7 +360,7 @@ LyteBox.prototype.updateDetails = function() {
                 object.style.display = '';
                 object.innerHTML = "Page " + eval(this.activeFrame + 1) + " of " + this.frameArray.length;
         }
-        this.appear('lbDetailsContainer', (this.doAnimations ? 0 : 100));
+        this.appear('lbDetailsContainer', 100);
 };
 LyteBox.prototype.updateNav = function() {
         if (this.isLyteframe) {
@@ -460,7 +446,6 @@ LyteBox.prototype.end = function(caller) {
         this.doc.getElementById('lbMain').style.display = 'none';
         this.fade('lbOverlay', 0);
         this.toggleSelects('visible');
-        if (this.hideFlash) { this.toggleFlash('visible'); }
         if (this.isLyteframe) {
                  this.initialize();
         }
@@ -496,7 +481,7 @@ LyteBox.prototype.appear = function(id, opacity) {
         if (opacity == 100 && (id == 'lbImage' || id == 'lbIframe')) {
                 try { object.removeAttribute("filter"); } catch(e) {}        /* Fix added for IE Alpha Opacity Filter bug. */
                 this.updateDetails();
-        } else if (opacity >= this.maxOpacity && id == 'lbOverlay') {
+        } else if (opacity >= 100 && id == 'lbOverlay') {
                 for (var i = 0; i < this.overlayTimerCount; i++) { window.clearTimeout(this.overlayTimerArray[i]); }
                 return;
         } else if (opacity >= 100 && id == 'lbDetailsContainer') {
@@ -534,7 +519,7 @@ LyteBox.prototype.resizeW = function(id, curW, maxW, pixelrate, speed) {
         }
         var object = this.doc.getElementById(id);
         var timer = speed ? speed : (this.resizeDuration/2);
-        var newW = (this.doAnimations ? curW : maxW);
+        var newW = maxW;
         object.style.width = (newW) + "px";
         if (newW < maxW) {
                 newW += (newW + pixelrate >= maxW) ? (maxW - newW) : pixelrate;
@@ -550,7 +535,7 @@ LyteBox.prototype.resizeW = function(id, curW, maxW, pixelrate, speed) {
 LyteBox.prototype.resizeH = function(id, curH, maxH, pixelrate, speed) {
         var timer = speed ? speed : (this.resizeDuration/2);
         var object = this.doc.getElementById(id);
-        var newH = (this.doAnimations ? curH : maxH);
+        var newH = maxH;
         object.style.height = (newH) + "px";
         if (newH < maxH) {
                 newH += (newH + pixelrate >= maxH) ? (maxH - newH) : pixelrate;

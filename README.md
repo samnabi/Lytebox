@@ -11,9 +11,17 @@ Lyterbox was forked from [Terrill Nederveld's Lytebox (v4.0a)](https://github.co
 - Arrow key navigation
 - Click background to close
 
-## Installation
+## How to use
 
-[...]
+	<script src="lyterbox.js" type="text/javascript"></script>
+	<link href="lyterbox.css" media="screen" rel="stylesheet" type="text/css" />
+
+	<!-- Single image -->
+	<a href="full-image.jpg" rel="lytebox"><img src="thumbnail.jpg" /></a>
+
+	<!-- Grouped images -->
+	<a href="full-image.jpg" rel="lytebox[groupname]"><img src="thumbnail.jpg" /></a>
+	<a href="full-image.jpg" rel="lytebox[groupname]"><img src="thumbnail.jpg" /></a>
 
 ## License
 
