@@ -327,10 +327,12 @@ LyteBox.prototype.showContent = function() {
                         this.preloadNeighborImages();
                 }
 
-                        this.doc.getElementById('lbPrev').style.display = (!this.isLyteframe ? '' : 'none');
-                        this.doc.getElementById('lbNext').style.display = (!this.isLyteframe ? '' : 'none');
-                        this.doc.getElementById('lbClose').style.display = '';
-                        this.doc.getElementById('lbDetails').style.display = '';
+                // Hide prev button if it's the first photo
+                if(this.activeImage == 0 || this.activeFrame == 0) this.doc.getElementById('lbPrev').style.display = 'none';
+                // Hide next button it it's the last photo
+                if(this.activeImage == this.imageArray.length - 1 || this.activeFrame == this.frameArray.length - 1) this.doc.getElementById('lbNext').style.display = 'none';
+                this.doc.getElementById('lbClose').style.display = '';
+                this.doc.getElementById('lbDetails').style.display = '';
 
                 this.doc.getElementById('lbImageContainer').style.display = (this.isLyteframe ? 'none' : '');
                 this.doc.getElementById('lbIframeContainer').style.display = (this.isLyteframe ? '' : 'none');
@@ -341,6 +343,8 @@ LyteBox.prototype.showContent = function() {
                 this.showContentTimerArray[this.showContentTimerCount++] = setTimeout("myLytebox.showContent()", 200);
         }
 };
+
+// Update the caption and image count
 LyteBox.prototype.updateDetails = function() {
         var object = this.doc.getElementById('lbCaption');
         var sTitle = (this.isLyteframe ? this.frameArray[this.activeFrame][1] : this.imageArray[this.activeImage][1]);
@@ -358,6 +362,7 @@ LyteBox.prototype.updateDetails = function() {
         }
         this.appear('lbDetailsContainer', 100);
 };
+
 LyteBox.prototype.updateNav = function() {
         if (this.isLyteframe) {
                 if(this.activeFrame != 0) {

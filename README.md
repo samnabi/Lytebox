@@ -25,7 +25,8 @@ Lyterbox was forked from [Terrill Nederveld's Lytebox (v4.0a)](https://github.co
 
 ## To do
 
-- Fix arrow display (remove prev on first, next on last; remove both on single img)
+- Remove styling from lyterbox.js (move it into lyterbox.css)
+- Create images-only variant of Lyterbox to reduce file size
 
 ## License
 
