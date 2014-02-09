@@ -114,6 +114,8 @@ LyteBox.prototype.initialize = function() {
     objBody.appendChild(objLytebox);
         objLytebox.appendChild(objOuterContainer);
             objOuterContainer.appendChild(objNav);
+                objNav.appendChild(objPrev);
+                objNav.appendChild(objNext);
                 objNav.appendChild(objClose);
             objOuterContainer.appendChild(objIframeContainer);
                 objIframeContainer.appendChild(objIframe);
@@ -122,11 +124,9 @@ LyteBox.prototype.initialize = function() {
             objOuterContainer.appendChild(objLoading);
         objLytebox.appendChild(objDetailsContainer);
             objDetailsContainer.appendChild(objDetailsData);
-                objDetailsData.appendChild(objPrev);
                 objDetailsData.appendChild(objDetails);
                     objDetails.appendChild(objCaption);
                     objDetails.appendChild(objNumberDisplay);
-                objDetailsData.appendChild(objNext);
 };
 
 LyteBox.prototype.updateLyteboxItems = function() {        
@@ -252,10 +252,6 @@ LyteBox.prototype.changeContent = function(imageNum) {
                         } else if (aStyles[i].indexOf('scrolling:') >= 0) {
                                 var s = aStyles[i].replace('scrolling:', '');
                                 iframe.scrolling = s.trim();
-                        } else if (aStyles[i].indexOf('border:') >= 0) {
-                                // Not implemented yet, as there are cross-platform issues with setting the border (from a GUI standpoint)
-                                //var b = aStyles[i].replace('border:', '');
-                                //iframe.style.border = b.trim();
                         }
                 }
                 this.resizeContainer(parseInt(iframe.width), parseInt(iframe.height));
@@ -355,10 +351,10 @@ LyteBox.prototype.updateDetails = function() {
         object = this.doc.getElementById('lbNumberDisplay');
         if (this.imageArray.length > 1 && !this.isLyteframe) {
                 object.style.display = '';
-                object.innerHTML = "Image " + eval(this.activeImage + 1) + " of " + this.imageArray.length;
+                object.innerHTML = eval(this.activeImage + 1) + " of " + this.imageArray.length;
         } else if (this.frameArray.length > 1 && this.isLyteframe) {
                 object.style.display = '';
-                object.innerHTML = "Page " + eval(this.activeFrame + 1) + " of " + this.frameArray.length;
+                object.innerHTML = eval(this.activeFrame + 1) + " of " + this.frameArray.length;
         }
         this.appear('lbDetailsContainer', 100);
 };

@@ -23,6 +23,10 @@ Lyterbox was forked from [Terrill Nederveld's Lytebox (v4.0a)](https://github.co
 	<a href="full-image.jpg" rel="lytebox[groupname]"><img src="thumbnail.jpg" /></a>
 	<a href="full-image.jpg" rel="lytebox[groupname]"><img src="thumbnail.jpg" /></a>
 
+## To do
+
+- Fix arrow display (remove prev on first, next on last; remove both on single img)
+
 ## License
 
 Lyterbox is released under the [Creative Commons Attribution 3.0 Unported](http://creativecommons.org/licenses/by/3.0/) License. Have fun, kids.
